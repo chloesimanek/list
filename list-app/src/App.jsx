@@ -1,9 +1,34 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
 
+const STORAGE_KEY = 'unique-list-items'
+
 function App() {
-  const [items, setItems] = useState([])
+  const [items, setItems] = useState(() => {
+    try {
+      const savedItems = window.localStorage.getItem(STORAGE_KEY)
+      if (savedItems === null) return []
+
+      const parsedItems = JSON.parse(savedItems)
+      if (!Array.isArray(parsedItems) || !parsedItems.every((item) => typeof item === 'string')) {
+        throw new TypeError('Saved list must be an array of strings.')
+      }
+
+      return parsedItems
+    } catch (error) {
+      console.error('Unable to load the saved list from local storage.', error)
+      return []
+    }
+  })
   const [entry, setEntry] = useState('')
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(items))
+    } catch (error) {
+      console.error('Unable to save the list to local storage.', error)
+    }
+  }, [items])
 
   function addItem(event) {
     event.preventDefault()
@@ -27,6 +52,18 @@ function App() {
         <span className="item-count" aria-live="polite">
           {items.length}
         </span>
+        <button
+          className="clear-button"
+          type="button"
+          onClick={() => {
+            if (window.confirm('Are you sure you want to clear the list?')) {
+              setItems([])
+            }
+          }}
+          disabled={items.length === 0}
+        >
+          Clear list
+        </button>
       </header>
       {/* add item and item list */}
       <section className="list-area" aria-label="Unique list items">
