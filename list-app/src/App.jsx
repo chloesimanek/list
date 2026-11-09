@@ -56,15 +56,13 @@ function ListPage() {
       {/* title and item count */}
       <header className="title">
         <div className="title-copy">
-          <h1>
-            End<span className="title-cursive">list</span>
-          </h1>
-          {/* number of items in the list */}
-          <span className="item-count" aria-live="polite" aria-label={`${items.length} items`}>
-            <span className="item-count-number">{items.length}</span>
-          </span>
+          <h1>Endlist</h1>
         </div>
-        <Menu itemCount={items.length} onClearList={clearList} />
+        {/* number of items in the list */}
+        <span className="item-count" aria-live="polite" aria-label={`${items.length} items`}>
+          <span className="item-count-number">{items.length}</span>
+        </span>
+        <Menu items={items} onClearList={clearList} />
       </header>
       {/* add item and item list */}
       <section className="list-area" aria-label="Unique list items">
