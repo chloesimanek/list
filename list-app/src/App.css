@@ -97,7 +97,7 @@ body,
   color: inherit;
   cursor: pointer;
   font: inherit;
-  font-size: 0.875rem;
+  font-size: 1rem;
   text-align: left;
 }
 
@@ -182,7 +182,7 @@ body,
   border-radius: 0.5rem;
   background-color: var(--color-base);
   font: inherit;
-  font-size: 0.875rem;
+  font-size: 1rem;
 }
 
 .textbox::placeholder {
