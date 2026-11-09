@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
+import AboutPage from './AboutPage'
 import './App.css'
+import Menu from './Menu'
 
 const STORAGE_KEY = 'unique-list-items'
 
 function ListPage() {
-  const [menuOpen, setMenuOpen] = useState(false)
   const [items, setItems] = useState(() => {
     try {
       const savedItems = window.localStorage.getItem(STORAGE_KEY)
@@ -40,12 +41,11 @@ function ListPage() {
       return
     }
 
-    setItems((currentItems) => [...currentItems, item])
+    setItems((currentItems) => [item, ...currentItems])
     setEntry('')
   }
 
   function clearList() {
-    setMenuOpen(false)
     if (window.confirm('Are you sure you want to clear the list?')) {
       setItems([])
     }
@@ -56,49 +56,15 @@ function ListPage() {
       {/* title and item count */}
       <header className="title">
         <div className="title-copy">
-          <h1>Endlist</h1>
+          <h1>
+            End<span className="title-cursive">list</span>
+          </h1>
           {/* number of items in the list */}
           <span className="item-count" aria-live="polite" aria-label={`${items.length} items`}>
-            {items.length}
+            <span className="item-count-number">{items.length}</span>
           </span>
         </div>
-        <div className="menu">
-          <button
-            className="menu-button"
-            type="button"
-            aria-label="Open list menu"
-            aria-expanded={menuOpen}
-            aria-haspopup="true"
-            aria-controls="list-menu"
-            onClick={() => setMenuOpen((isOpen) => !isOpen)}
-          >
-            <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor">
-              <circle cx="12" cy="5" r="1.7" />
-              <circle cx="12" cy="12" r="1.7" />
-              <circle cx="12" cy="19" r="1.7" />
-            </svg>
-          </button>
-          {menuOpen && (
-            <div className="menu-popover" id="list-menu">
-              <button
-                className="menu-item"
-                type="button"
-                onClick={clearList}
-                disabled={items.length === 0}
-              >
-                Clear list
-              </button>
-              <div className="menu-divider" role="separator" />
-              <button className="menu-item" type="button" disabled>
-                Share
-              </button>
-              <div className="menu-divider" role="separator" />
-              <a className="menu-item about-menu-link" href="/about">
-                About
-              </a>
-            </div>
-          )}
-        </div>
+        <Menu itemCount={items.length} onClearList={clearList} />
       </header>
       {/* add item and item list */}
       <section className="list-area" aria-label="Unique list items">
@@ -106,7 +72,7 @@ function ListPage() {
           <input
             className="textbox"
             aria-label="Add an item"
-            placeholder="Type an item and press Enter"
+            placeholder="Add an item"
             value={entry}
             onChange={(event) => setEntry(event.target.value)}
           />
@@ -123,18 +89,7 @@ function ListPage() {
 
 function App() {
   if (window.location.pathname === '/about') {
-    return (
-      <main className="about-page">
-        <p>Pick a topic, start listing, and see how many unique answers you can come up with.</p>
-        <p>
-          Inspired by{' '}
-          <a href="https://www.instagram.com/datakabas/" target="_blank" rel="noreferrer">
-            datakabas
-          </a>{' '}
-          and their challenge to name 3,000 real people in a single sitting.
-        </p>
-      </main>
-    )
+    return <AboutPage />
   }
 
   return <ListPage />
